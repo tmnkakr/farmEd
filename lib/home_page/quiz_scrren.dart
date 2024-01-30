@@ -66,14 +66,14 @@ class _QuizScreenState extends State<QuizScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Quiz Time'),
-          actions: [
-            Padding(
-                padding: EdgeInsets.only(right: 40),
-                child: Text(
-                  coins.toString() + ' Coins',
-                  style: TextStyle(fontSize: 20),
-                ))
-          ],
+          // actions: [
+          //   Padding(
+          //       padding: EdgeInsets.only(right: 40),
+          //       child: Text(
+          //         coins.toString() + ' Coins',
+          //         style: TextStyle(fontSize: 20),
+          //       ))
+          // ],
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 14),
@@ -167,14 +167,14 @@ class _optionWtState extends State<optionWt> {
                 title: Text('Congrats'),
                 content: Text('You won 5 more Coins, check your Reward now!',
                     style: TextStyle(color: Colors.green)),
-                // actions: [
-                //   TextButton(
-                //     onPressed: () {
-                //       Navigator.of(context).pop(); // Close the dialog
-                //     },
-                //     child: Text('OK'),
-                //   ),
-                // ],
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
               );
             },
           );

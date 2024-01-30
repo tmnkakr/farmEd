@@ -33,7 +33,7 @@ class _SocietyPageState extends State<SocietyPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add New Post'),
+          title: const Text('Add New Message'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,8 +41,8 @@ class _SocietyPageState extends State<SocietyPage> {
               TextField(
                 controller: controller,
                 maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: 'Please Write your Content here...',
+                decoration: const InputDecoration(
+                  hintText: 'Please Write here...',
                   border: OutlineInputBorder(),
                 ),
               )
@@ -58,15 +58,59 @@ class _SocietyPageState extends State<SocietyPage> {
                 });
                 jsonString = myList.join(',');
                 prefs.setString('myListKey', jsonString);
-
                 Navigator.of(context).pop();
+                sendPost(context, 'Share');
               },
-              child: Text('OK'),
+              child: Text('Share'),
+            ),
+            TextButton(
+              onPressed: () async {
+                String? jsonString = prefs.getString('myListKey');
+                myList = jsonString?.split(',') ?? [];
+                setState(() {
+                  myList.add(controller.text.trim());
+                });
+                jsonString = myList.join(',');
+                prefs.setString('myListKey', jsonString);
+                Navigator.of(context).pop();
+                sendPost(context, 'Send');
+              },
+              child: Text('Post'),
             ),
           ],
         );
       },
     );
+  }
+
+  void sendPost(BuildContext context, String text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Message $text'),
+          content: Text('Successfully $text your Message...'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('ok')),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletePost(String text) {
+    String? jsonString = prefs.getString('myListKey');
+    myList = jsonString?.split(',') ?? [];
+    setState(() {
+      myList.remove(text);
+      // myList.add(controller.text.trim());
+    });
+    jsonString = myList.join(',');
+    prefs.setString('myListKey', jsonString);
   }
 
   @override
@@ -86,9 +130,20 @@ class _SocietyPageState extends State<SocietyPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    myList[index],
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Row(
+                    children: [
+                      Text(
+                        myList[index],
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      IconButton(
+                          onPressed: () {
+                            deletePost(myList[index]);
+                          },
+                          icon: const Icon(Icons.delete, color: Colors.red))
+                    ],
                   ),
                 ),
               ),

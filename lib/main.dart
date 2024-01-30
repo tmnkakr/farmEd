@@ -1,6 +1,8 @@
+import 'package:farmer_quiz_app/Rewards/rewards_screen.dart';
 import 'package:farmer_quiz_app/Society/society_page.dart';
 import 'package:farmer_quiz_app/home_page/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,11 +11,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sagars App',
+      title: 'FarmEd',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -35,9 +36,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
+  int currentCoins = 0;
+  late SharedPreferences prefs;
+
+  void ini() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    ini();
+    super.initState();
+  }
 
   DateTime currentDate = DateTime.now();
-  DateTime comparisonDate = DateTime(2024, 1, 30);
+  DateTime comparisonDate = DateTime(2024, 1, 31);
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +60,23 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
       ),
       body: currentDate.isAfter(comparisonDate)
-          ? Text("Error")
+          ? const Text("Error")
           : IndexedStack(
               index: _currentIndex,
               children: [
                 const HomePage(),
                 SocietyPage(),
-                const Placeholder(
-                  color: Colors.green,
-                ),
+                RewardsScreen(currentCoins)
               ],
             ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          if (index == 2) {
+            setState(() {
+              currentCoins = prefs.getInt('coins') ?? 0;
+            });
+          }
           setState(() {
             _currentIndex = index;
           });
@@ -70,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          // Add more BottomNavigationBarItems as needed
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Society',

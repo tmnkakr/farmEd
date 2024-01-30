@@ -1,3 +1,5 @@
+import 'package:farmer_quiz_app/home_page/learn1.dart';
+import 'package:farmer_quiz_app/home_page/learn2.dart';
 import 'package:flutter/material.dart';
 
 class LearningList extends StatelessWidget {
@@ -12,13 +14,29 @@ class LearningList extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ListCard(
-              imagePath: 'assets/images/farmerLearning.png',
-              title: 'How to Put Crops in field?'),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Learning1()),
+              );
+            },
+            child: ListCard(
+                imagePath: 'assets/images/farmerLearning.png',
+                title: 'How to Put Crops in field?'),
+          ),
           SizedBox(height: 20),
-          ListCard(
-              imagePath: 'assets/images/farmerLearning.png',
-              title: 'Which Crop is good this Season?'),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Learning2()),
+              );
+            },
+            child: ListCard(
+                imagePath: 'assets/images/farmerLearning.png',
+                title: 'Which Crop is good this Season?'),
+          ),
         ],
       ),
     );
